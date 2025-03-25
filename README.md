@@ -1,4 +1,4 @@
-# HashesCodeChallenge
+# Hashes Code Challenge
 # Solution Overview and Deployment
 
 This solution consists of two C# .NET 8.0 projects:
