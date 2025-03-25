@@ -1,0 +1,51 @@
+version: '3.8'  # Specify the Docker Compose version
+
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb-compose
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: "hash#11"
+      MYSQL_DATABASE: codetask
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+  hashes-web-api:
+    image: hashes-web-api:1.0.0
+    build:
+      context: ./
+      dockerfile: Hashes.API.Dockerfile   # Build the image from the current directory (context)
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+  hashes-background-worker:
+    image: hashes-background-worker:1.0.0
+    build:
+      context: ./
+      dockerfile: Hashes.Receiver.Dockerfile   # Build the image from the current directory (context)
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
