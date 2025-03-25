@@ -43,6 +43,8 @@ Both **RabbitMQ** and **MariaDB** are automatically deployed, configured, and st
 - Standard ports **5672** (AMQP) and **15672** (Management UI) are exposed to the host.
 - The **RabbitMQ Admin Panel** is accessible at:
   - [http://localhost:15672/](http://localhost:15672/)
+  - **Username:** `guest`
+  - **Password:** `guest`
 
 ### MariaDB
 
